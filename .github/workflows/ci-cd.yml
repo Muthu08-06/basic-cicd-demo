@@ -1,0 +1,30 @@
+
+name: Basic CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build application
+        run: python -m py_compile app.py
+
+      - name: Test application
+        run: python app.py
+
+      - name: Deploy application
+        run: echo "Deployment stage completed successfully!"
