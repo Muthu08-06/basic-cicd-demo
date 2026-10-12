@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Application
+    name: Build, Test, and Publish Docker Image
     runs-on: ubuntu-latest
 
     steps:
@@ -26,5 +26,21 @@ jobs:
       - name: Test application
         run: python app.py
 
-      - name: Deploy application
-        run: echo "Deployment stage completed successfully!"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: muthu0806/basic-cicd-demo:1.0
+
+      - name: Deployment stage
+        run: echo "Docker image built and pushed successfully!"
